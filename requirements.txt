@@ -1,6 +1,6 @@
 flask
 openai-whisper
 werkzeug
-moviepy
+moviepy==1.0.3
 torch
 ffmpeg-python
