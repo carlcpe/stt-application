@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MP4 Transcriber</title>
+  </head>
+  <body>
+    <h2>Upload an MP4 file for transcription</h2>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile()">Upload & Transcribe</button>
+    <p id="result"></p>
+
+    <script>
+      function uploadFile() {
+        let file = document.getElementById("fileInput").files[0];
+        let formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/upload", { method: "POST", body: formData })
+          .then((response) => response.json())
+          .then(
+            (data) =>
+              (document.getElementById("result").innerText = data.transcription)
+          )
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
