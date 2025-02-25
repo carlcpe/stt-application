@@ -11,7 +11,7 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 model = whisper.load_model("base")  # Load Whisper model
 
 def extract_audio(video_path, audio_path):
-    """Extracts audio from video and saves it as a WAV file."""
+    # Extracts audio from video and saves it as a WAV file.
     audio = AudioFileClip(video_path)
     audio.write_audiofile(audio_path, codec='pcm_s16le')
 
@@ -19,7 +19,7 @@ def transcribe_audio(audio_path):
     result = model.transcribe(audio_path)  
     return result['text']
 
-@app.route('/templaces')
+@app.route('/')
 def index():
     return render_template('index.html')
 
@@ -33,15 +33,21 @@ def upload():
         return jsonify({"error": "No selected file"}), 400
     
     filename = secure_filename(file.filename)
-    video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    file.save(video_path)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(file_path)
     
-    audio_path = video_path.rsplit('.', 1)[0] + ".wav"
-    extract_audio(video_path, audio_path)
+    if filename.lower().endswith(('.mp4', '.mov', '.avi', '.ogg')):
+        # Bug: I have to put the audio file extract_audio function for it to be detected by the program
+        # and i'm not so sure why. I am programming this at 4am and ChatGPT is my best friend.
+        audio_path = file_path.rsplit('.', 1)[0] + ".wav"
+        extract_audio(file_path, audio_path)
+    else:
+        audio_path = file_path
+    
     transcription = transcribe_audio(audio_path)
     
     os.remove(audio_path)  # Clean up audio file
-    os.remove(video_path)  # Clean up video file
+    os.remove(file_path)  # Clean up original file
     
     return jsonify({"transcription": transcription})
 
