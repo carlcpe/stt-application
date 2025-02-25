@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>MP4 Transcriber</title>
-  </head>
-  <body>
-    <h2>Upload an MP4 file for transcription</h2>
-    <input type="file" id="fileInput" />
+<head>
+    <title>MP4 & Audio Transcriber</title>
+</head>
+<body>
+    <h2>Upload a Video or Audio File for Transcription</h2>
+    <p>Accepted file types: MP4, MOV, AVI, MP3, WAV, M4A, OGG, FLAC, AAC</p>
+    <input type="file" id="fileInput" accept=".mp4, .mov, .avi, .mp3, .wav, .m4a, .ogg, .flac, .aac">
     <button onclick="uploadFile()">Upload & Transcribe</button>
     <p id="result"></p>
 
     <script>
-      function uploadFile() {
-        let file = document.getElementById("fileInput").files[0];
-        let formData = new FormData();
-        formData.append("file", file);
+        function uploadFile() {
+            let file = document.getElementById('fileInput').files[0];
+            let formData = new FormData();
+            formData.append('file', file);
 
-        fetch("/upload", { method: "POST", body: formData })
-          .then((response) => response.json())
-          .then(
-            (data) =>
-              (document.getElementById("result").innerText = data.transcription)
-          )
-          .catch((error) => console.error("Error:", error));
-      }
+            fetch('/upload', { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => document.getElementById('result').innerText = data.transcription)
+            .catch(error => console.error('Error:', error));
+        }
     </script>
-  </body>
+</body>
 </html>
