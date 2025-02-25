@@ -1,1 +1,6 @@
-# py module requirements here
+flask
+openai-whisper
+werkzeug
+moviepy
+torch
+ffmpeg-python
